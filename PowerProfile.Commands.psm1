@@ -245,7 +245,7 @@ function Uninstall-PowerProfile {
     Reset-PoProfileState -Force
 
     if (
-        (Get-FileHash -Path (Join-Path (Split-Path $PSScriptRoot) 'PowerProfile' 'profile.ps1')).Hash -eq
+        (Get-FileHash -Path (Join-Path (Split-Path (Get-Module -Name PowerProfile).Path) 'profile.ps1')).Hash -ne
         (Get-FileHash -Path $ProfilePS1).Hash
     ) {
         Remove-Item -Force -Path $ProfilePS1 -ErrorAction Ignore -Confirm:$false
@@ -258,7 +258,7 @@ function Uninstall-PowerProfile {
             )
         }
     } else {
-        $bak = $ProfilePS1 + '.bak.' + $datetime
+        $bak = $ProfilePS1 + '.bak.' + (Get-Date).ToString('yyyy-MM-dd_HHmmss')
         Rename-Item $ProfilePS1 $bak
 
         Write-PoProfileProgress -ScriptTitleType Information -ScriptTitle @(
